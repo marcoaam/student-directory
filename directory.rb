@@ -49,52 +49,55 @@ def input_students
 	students
 end
 #This section defines the  methods
+#print_header method just prints the header
 def print_header
 	puts "The students of my cohort at Makers Academy"
 	puts "-----------------"
 end
 
-def print_names(students)
-	puts "This is the indexed list of all students in the directory"
+#names method takes an array (which is an array multiple 2 element hashes) and prints each element of the array along with its index number
+def names(students)
 	students.each_with_index do |student, index|
 		puts "#{index + 1}. #{student[:name]} (#{student[:cohort]} cohort)"
 	end
 end
 
-def print_footer(names)
-	puts "Overall, we have #{names.length} students in this cohort"
+#print_names method prints the output of the names method
+def print_names(students)
+	puts "This is a list of all students in the database"
+	names(students)
 end
 
-def print_names_begin_a(names_a)
-	puts "This is the indexed list of students whose names begin with an A"
-	names_a.each_with_index do |student, index|
-		if student[:name].start_with?("a" || "A")
-			puts "#{index + 1}. #{student[:name]} (#{student[:cohort]} cohort)"
-		end
+#only prints those elements of the students array that begin with an A
+def print_names_begin_a(students)
+	puts "This is a list of students whose names begin with an A"
+	name_begin_a = students.select {|student| student[:name].start_with?('a'||'A')}
 
+	if name_begin_a.empty?
+		puts "-There are no students whose names begin with an 'A'"
+	else
+		names(name_begin_a)
+	end	
+end
+
+#only prints those elements of the students array that have less than 12 characters
+def print_length_less_12(students)
+	puts "This is a list of students with less than 12 letters in their names"
+	name_less_than_12_letters = students.select { |student| student[:name].length < 12 }
+	
+	if name_less_than_12_letters.empty?
+		puts "-There are no students who have less than 12 letters in their name"
+	else
+		names(name_less_than_12_letters)
 	end
 end
 
-def print_length_less_12(names_12)
-	puts "This is the index list of students with less than 12 letters in their names"
-	names_12.each_with_index do |student, index|
-		if student[:name].length < 12
-			puts "#{index + 1}. #{student[:name]} (#{student[:cohort]} cohort)"
-		end
 
-	end
+
+#prints the total number of elements in the students array i.e. total number of students
+def print_footer(students)
+	puts "Overall, we have #{students.length} students in this cohort"
 end
-
-def print_length_less_12_trial(names_12)
-	puts "This is the index list of students with less than 12 letters in their names"
-	names_12.each_with_index do |student, index|
-		when student[:name].length < 12 then puts "#{index + 1}. #{student[:name]} (#{student[:cohort]} cohort)"
-		else puts "No names less than 12"
-		end
-
-	end
-end
-
 
 
 #This code calls the methods above
@@ -103,5 +106,4 @@ print_header
 print_names(students)
 print_names_begin_a(students)
 print_length_less_12(students)
-print_length_less_12_trial(students)
 print_footer(students)
