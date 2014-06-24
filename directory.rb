@@ -55,8 +55,9 @@ def print_header
 end
 
 def print_names(students)
-	students.each do |student|
-		puts "#{student[:name]} (#{student[:cohort]} cohort)"
+	puts "This is the indexed list of all students in the directory"
+	students.each_with_index do |student, index|
+		puts "#{index + 1}. #{student[:name]} (#{student[:cohort]} cohort)"
 	end
 end
 
@@ -64,8 +65,43 @@ def print_footer(names)
 	puts "Overall, we have #{names.length} students in this cohort"
 end
 
+def print_names_begin_a(names_a)
+	puts "This is the indexed list of students whose names begin with an A"
+	names_a.each_with_index do |student, index|
+		if student[:name].start_with?("a" || "A")
+			puts "#{index + 1}. #{student[:name]} (#{student[:cohort]} cohort)"
+		end
+
+	end
+end
+
+def print_length_less_12(names_12)
+	puts "This is the index list of students with less than 12 letters in their names"
+	names_12.each_with_index do |student, index|
+		if student[:name].length < 12
+			puts "#{index + 1}. #{student[:name]} (#{student[:cohort]} cohort)"
+		end
+
+	end
+end
+
+def print_length_less_12_trial(names_12)
+	puts "This is the index list of students with less than 12 letters in their names"
+	names_12.each_with_index do |student, index|
+		when student[:name].length < 12 then puts "#{index + 1}. #{student[:name]} (#{student[:cohort]} cohort)"
+		else puts "No names less than 12"
+		end
+
+	end
+end
+
+
+
 #This code calls the methods above
 students = input_students
 print_header
 print_names(students)
+print_names_begin_a(students)
+print_length_less_12(students)
+print_length_less_12_trial(students)
 print_footer(students)
