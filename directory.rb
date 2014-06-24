@@ -31,18 +31,28 @@ students = [
 
 #Hash Input methods
 def input_students
-	puts "Please enter the names of the students"
-	puts "To finish, just hit return twice"
+	puts "Please enter the name of the first student"
+	puts "To finish, just hit return"
 	# Empty array creation
 	students = []
 	#Get the 1st name
 	name = gets.chomp
 	#While name is not empty, repeat this
 	while !name.empty? do
+		#Gets month
+		puts "Enter the month"
+		month = gets.chomp.downcase.to_sym
+		if month.empty?
+			month = :june
+		end
+		#Gets their hobbies
+		puts "Enter their hobbies"
+		hobbies = gets.chomp
 		#add the student hash to the array
-		students << {:name => name, :cohort => :june}
+		students << {:name => name, :cohort => month, :hobbies => hobbies}
 		puts "Now we have #{students.length} students"
 		#get another name from the user
+		puts "Enter the name of the next student or press return to finish"
 		name = gets.chomp
 	end
 	#return the array of students
@@ -58,8 +68,14 @@ end
 #names method takes an array (which is an array multiple 2 element hashes) and prints each element of the array along with its index number
 def names(students)
 	students.each_with_index do |student, index|
-		puts "#{index + 1}. #{student[:name]} (#{student[:cohort]} cohort)"
+		puts "#{index + 1}. #{student[:name]} - #{student[:cohort]} cohort, hobbies: #{student[:hobbies]}"
 	end
+end
+#This is the method that sorts the students by cohort
+def names_by_cohort(students)
+	puts "This is the student database sorted by cohort month"
+	students.sort_by! {|student| student[:cohort]}
+	names(students)
 end
 
 #print_names method prints the output of the names method
@@ -106,4 +122,5 @@ print_header
 print_names(students)
 print_names_begin_a(students)
 print_length_less_12(students)
+names_by_cohort(students)
 print_footer(students)
