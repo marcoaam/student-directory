@@ -39,17 +39,15 @@ def print_header
 end
 
 #Hash Input method
-def input_students
+def input_students(students)
   puts "Please enter the name of the first student"
   puts "To go back to the Main menu, just hit return without entering any name"
-  # Empty array creation
-  students = []
   #Get the 1st name
   name = gets.chomp
   #While name is not empty, repeat this
   while !name.empty? do
     #Gets month
-    puts "Enter the month"
+    puts "Enter the month of the cohort"
     month = gets.chomp.downcase.to_sym
     if month.empty?
       month = :june
@@ -61,7 +59,7 @@ def input_students
     students << {:name => name, :cohort => month, :hobbies => hobbies}
     puts number_of_students(students)
     #get another name from the user
-    puts "Enter the name of the next student or press return to go back to the Main menu"
+    puts "\nEnter the name of the next student or press return to go back to the Main menu"
     name = gets.chomp
   end
   #returns the array of students
@@ -99,7 +97,7 @@ end
 #only prints those elements of the students array that begin with an A
 def print_names_begins_with(students, letter)
   puts "\nThis is a list of students whose names begin with the letter #{letter}"
-  name_begin_a = students.select {|student| student[:name].start_with?(letter||letter.upcase)}
+  name_begin_a = students.select {|student| student[:name].start_with?(letter, letter.upcase)}
 #This code tests if is empty
   if name_begin_a.empty?
     puts "-There are no students whose names begin with an 'A'"
@@ -125,7 +123,7 @@ def print_footer(students)
   if pluralize?(students)
     puts "\nOverall, we have #{students.length} students in all cohorts"
   else
-    puts "\nOverall, we have #{students.length} student in all cohort"
+    puts "\nOverall, we don't have #{students.length} any student in the directory"
   end
 end
 
@@ -133,7 +131,8 @@ end
 
 #This method holds the main menu that calls all the methods selected by the user
 def interactive_menu(students)
-
+  puts ""
+  puts "-----Student Directory Program-----".center(50)
   loop do
     puts ""
     puts "-------Main menu-------".center(50)
@@ -147,9 +146,9 @@ def interactive_menu(students)
     selection = gets.chomp
     case selection
     when "1"
-      students = input_students
+      students = input_students(students)
     when "2"
-      puts "\nThis is a list of all students in the database"
+      puts "\nThis is a list of all students in the Student Directory"
       print_names(students)
       print_footer(students)
     when "3"
@@ -157,7 +156,7 @@ def interactive_menu(students)
     when "4"
       print_length_less_12(students)
     when "5"
-      puts "\nThis is the student database sorted by cohort month"
+      puts "\nThis is the Student Directory grouped by cohort month"
       sorted_students = names_by_cohort(students)
       print_names(sorted_students)
     when "6"
@@ -165,7 +164,7 @@ def interactive_menu(students)
     when "9"
       exit
     else
-      "Invalid selection"
+      puts "Invalid selection"
     end
   end
 end
@@ -175,7 +174,7 @@ def save_students(students)
   file = File.open("students.csv", "w")
   # iterate over the array
   students.each do |student|
-    student_data = [student[:name], student[:cohort]]
+    student_data = [student[:name], student[:cohort], student[:hobbies]]
     csv_line = student_data.join(",")
     file.puts csv_line
   end
@@ -184,7 +183,11 @@ end
 
 #Declaration
 students = []
+
+#Calling the Menu method
 interactive_menu(students)
+
+
 #This code calls the methods above
 #students = input_students
 #print_header
