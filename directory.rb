@@ -29,6 +29,12 @@ students = [
 ]
 =end
 
+#print_header method just prints the header
+def print_header
+	puts "The students of my cohort at Makers Academy"
+	puts "-----------------"
+end
+
 #Hash Input method
 def input_students
 	puts "Please enter the name of the first student"
@@ -50,19 +56,13 @@ def input_students
 		hobbies = gets.chomp
 		#add the student hash to the array
 		students << {:name => name, :cohort => month, :hobbies => hobbies}
-		puts "Now we have #{students.length} students"
+		puts students.length <= 1 ? "Now we have #{students.length} student" : "Now we have #{students.length} students"
 		#get another name from the user
 		puts "Enter the name of the next student or press return to finish"
 		name = gets.chomp
 	end
 	#returns the array of students
 	students
-end
-#This section defines the  methods
-#print_header method just prints the header
-def print_header
-	puts "The students of my cohort at Makers Academy"
-	puts "-----------------"
 end
 
 #names method takes an array (which is an array multiple 2 element hashes) and prints each element of the array along with its index number
@@ -73,20 +73,20 @@ def names(students)
 end
 #This is the method that sorts the students by cohort
 def names_by_cohort(students)
-	puts "This is the student database sorted by cohort month"
+	puts "\nThis is the student database sorted by cohort month"
 	students.sort_by! {|student| student[:cohort]}
 	names(students)
 end
 
 #print_names method prints the output of the names method
 def print_names(students)
-	puts "This is a list of all students in the database"
+	puts "\nThis is a list of all students in the database"
 	names(students)
 end
 
 #only prints those elements of the students array that begin with an A
 def print_names_begin_a(students)
-	puts "This is a list of students whose names begin with an A"
+	puts "\nThis is a list of students whose names begin with an A"
 	name_begin_a = students.select {|student| student[:name].start_with?('a'||'A')}
 #This code tests if is empty
 	if name_begin_a.empty?
@@ -98,7 +98,7 @@ end
 
 #only prints those elements of the students array that have less than 12 characters
 def print_length_less_12(students)
-	puts "This is a list of students with less than 12 letters in their names"
+	puts "\nThis is a list of students with less than 12 letters in their names"
 	name_less_than_12_letters = students.select { |student| student[:name].length < 12 }
 	
 	if name_less_than_12_letters.empty?
@@ -112,7 +112,7 @@ end
 
 #prints the total number of elements in the students array i.e. total number of students
 def print_footer(students)
-	puts "Overall, we have #{students.length} students in this cohort"
+	puts students.length <= 1 ? "\nOverall, we have #{students.length} student in this cohort" : "\nOverall, we have #{students.length} students in all cohorts"
 end
 
 
