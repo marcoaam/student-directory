@@ -29,7 +29,7 @@ students = [
 ]
 =end
 
-#Hash Input methods
+#Hash Input method
 def input_students
 	puts "Please enter the name of the first student"
 	puts "To finish, just hit return"
@@ -55,7 +55,7 @@ def input_students
 		puts "Enter the name of the next student or press return to finish"
 		name = gets.chomp
 	end
-	#return the array of students
+	#returns the array of students
 	students
 end
 #This section defines the  methods
@@ -88,7 +88,7 @@ end
 def print_names_begin_a(students)
 	puts "This is a list of students whose names begin with an A"
 	name_begin_a = students.select {|student| student[:name].start_with?('a'||'A')}
-
+#This code tests if is empty
 	if name_begin_a.empty?
 		puts "-There are no students whose names begin with an 'A'"
 	else
