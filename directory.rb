@@ -1,3 +1,5 @@
+
+
 # This code is an array of the students in the June cohort at MA
 =begin
 students = [
@@ -57,7 +59,7 @@ def input_students
     hobbies = gets.chomp
     #add the student hash to the array
     students << {:name => name, :cohort => month, :hobbies => hobbies}
-    puts students.length <= 1 ? "Now we have #{students.length} student" : "Now we have #{students.length} students"
+    puts number_of_students(students)
     #get another name from the user
     puts "Enter the name of the next student or press return to go back to the Main menu"
     name = gets.chomp
@@ -66,11 +68,23 @@ def input_students
   students
 end
 
+def pluralize?(students)
+  students.length > 1
+end
+
+def number_of_students(students)
+  if pluralize?(students)
+    "Now we have #{students.length} students"
+  else 
+    "Now we have #{students.length} student"
+  end
+end
+
 #names method takes an array (which is an array multiple 2 element hashes) and prints each element of the array along with its index number
 def names(students)
   if !students.empty? 
-    students.each_with_index do |student, index|
-      puts "#{index + 1}. #{student[:name]} - #{student[:cohort]} cohort, hobbies: #{student[:hobbies]}"
+    students.each.with_index(1) do |student, index|
+      puts "#{index}. #{student[:name]} - #{student[:cohort]} cohort, hobbies: #{student[:hobbies]}"
     end
   else
     puts "no students"
@@ -83,9 +97,9 @@ def names_by_cohort(students)
 end
 
 #only prints those elements of the students array that begin with an A
-def print_names_begin_a(students)
-  puts "\nThis is a list of students whose names begin with an A"
-  name_begin_a = students.select {|student| student[:name].start_with?('a'||'A')}
+def print_names_begins_with(students, letter)
+  puts "\nThis is a list of students whose names begin with the letter #{letter}"
+  name_begin_a = students.select {|student| student[:name].start_with?(letter||letter.upcase)}
 #This code tests if is empty
   if name_begin_a.empty?
     puts "-There are no students whose names begin with an 'A'"
@@ -106,11 +120,13 @@ def print_length_less_12(students)
   end
 end
 
-
-
 #prints the total number of elements in the students array i.e. total number of students
 def print_footer(students)
-  puts students.length <= 1 ? "\nOverall, we have #{students.length} student in this cohort" : "\nOverall, we have #{students.length} students in all cohorts"
+  if pluralize?(students)
+    puts "\nOverall, we have #{students.length} students in all cohorts"
+  else
+    puts "\nOverall, we have #{students.length} student in all cohort"
+  end
 end
 
 #This method holds the main menu that calls all the methods selected by the user
@@ -127,39 +143,69 @@ def interactive_menu(students)
     puts "9. Exit"
     selection = gets.chomp
     case selection
-      when "1"
-        students = input_students
-      when "2"
-        puts "\nThis is a list of all students in the database"
-        names(students)
-      when "3"
-        print_names_begin_a(students)
-      when "4"
-        print_length_less_12(students)
-      when "5"
-        puts "\nThis is the student database sorted by cohort month"
-        sorted_students = names_by_cohort(students)
-        names(sorted_students)
-      when "9"
-        exit
-      else
-        "Invalid selection"
-      end
+    when "1"
+      students = input_students
+    when "2"
+      puts "\nThis is a list of all students in the database"
+      names(students)
+      print_footer(students)
+    when "3"
+      print_names_begins_with(students, 'a')
+    when "4"
+      print_length_less_12(students)
+    when "5"
+      puts "\nThis is the student database sorted by cohort month"
+      sorted_students = names_by_cohort(students)
+      names(sorted_students)
+    when "9"
+      exit
+    else
+      "Invalid selection"
     end
+  end
 end
 
 #Declaration
-students = [
-  {:name => "Alex", :cohort => :june},
-  {:name => "Jeremy", :cohort => :june}
-]
-
+students = []
+interactive_menu(students)
 #This code calls the methods above
 #students = input_students
-interactive_menu(students)
 #print_header
 #print_names(students)
 #print_names_begin_a(students)
 #print_length_less_12(students)
 #names_by_cohort(students)
 #print_footer(students)
+
+#    binding.pry
+#require 'pry'
+
+
+
+# class Student
+#   attr_accessor :name, :cohort
+#   # attr_reader :attr_names
+#   # attr_writer :attr_names
+
+#   # def cohort
+#   #   @cohort
+#   # end
+
+#   # def cohort=(value)
+#   #   @cohort = value
+#   # end
+
+#   def initialize(name, cohort)
+#     @name = name
+#     @cohort = cohort
+#   end
+# end
+
+# students = [
+#   Student.new("marco", "june"),
+#   Student.new("kori", "december"),
+#   Student.new("alex", "june")
+# ]
+
+# students.sort_by(&:cohort)
+# students.sort_by {|student| student.cohort }
