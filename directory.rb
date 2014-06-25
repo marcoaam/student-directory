@@ -81,7 +81,7 @@ def number_of_students(students)
 end
 
 #names method takes an array (which is an array multiple 2 element hashes) and prints each element of the array along with its index number
-def names(students)
+def print_names(students)
   if !students.empty? 
     students.each.with_index(1) do |student, index|
       puts "#{index}. #{student[:name]} - #{student[:cohort]} cohort, hobbies: #{student[:hobbies]}"
@@ -104,7 +104,7 @@ def print_names_begins_with(students, letter)
   if name_begin_a.empty?
     puts "-There are no students whose names begin with an 'A'"
   else
-    names(name_begin_a)
+    print_names(name_begin_a)
   end 
 end
 
@@ -116,7 +116,7 @@ def print_length_less_12(students)
   if name_less_than_12_letters.empty?
     puts "-There are no students who have less than 12 letters in their name"
   else
-    names(name_less_than_12_letters)
+    print_names(name_less_than_12_letters)
   end
 end
 
@@ -129,6 +129,8 @@ def print_footer(students)
   end
 end
 
+
+
 #This method holds the main menu that calls all the methods selected by the user
 def interactive_menu(students)
 
@@ -140,6 +142,7 @@ def interactive_menu(students)
     puts "3. Show all the students that their names starts with an 'A'"
     puts "4. Show all the students that their names have less than 12 characters"
     puts "5. Show the students grouped by cohort"
+    puts "6. Save the students in a file"
     puts "9. Exit"
     selection = gets.chomp
     case selection
@@ -147,7 +150,7 @@ def interactive_menu(students)
       students = input_students
     when "2"
       puts "\nThis is a list of all students in the database"
-      names(students)
+      print_names(students)
       print_footer(students)
     when "3"
       print_names_begins_with(students, 'a')
@@ -156,13 +159,27 @@ def interactive_menu(students)
     when "5"
       puts "\nThis is the student database sorted by cohort month"
       sorted_students = names_by_cohort(students)
-      names(sorted_students)
+      print_names(sorted_students)
+    when "6"
+      save_students(students)
     when "9"
       exit
     else
       "Invalid selection"
     end
   end
+end
+
+def save_students(students)
+  # open the file to write the info
+  file = File.open("students.csv", "w")
+  # iterate over the array
+  students.each do |student|
+    student_data = [student[:name], student[:cohort]]
+    csv_line = student_data.join(",")
+    file.puts csv_line
+  end
+  file.close
 end
 
 #Declaration
