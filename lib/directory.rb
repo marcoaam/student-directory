@@ -50,11 +50,13 @@ def input_students
   get_student_details(name)
 end
 
+#Method to ask the user for input
 def ask_for(detail)
   puts "Enter #{detail}"
   STDIN.gets.chomp  
 end
 
+#Mehod to ask the user for the student details
 def get_student_details(name)
   while !name.empty? do
     #Gets month
@@ -69,10 +71,12 @@ def get_student_details(name)
   end
 end
 
+#Method returns true if global @students is greater than one
 def pluralize?
   @students.length > 1
 end
 
+#Mehod to pluralize any word
 def pluralize(word)
   return word + "s" if pluralize?
   word
@@ -86,15 +90,17 @@ end
 #   end
 # end
 
-#names method takes an array (which is an array multiple 2 element hashes) and prints each element of the array along with its index number
+#Method that prints a line with the content of the hash
 def print_line(student, index)
   "#{index}. #{student[:name]} - #{student[:cohort]} cohort, hobbies: #{student[:hobbies]}"
 end
 
+#prints the list pf students
 def print_student_list(list_of_students)
   list_of_students.map.with_index(1) { |student, index| print_line(student, index) }
 end
 
+#Checks if students is empty
 def print_names(list_of_students)
   puts !list_of_students.empty? ?  print_student_list(list_of_students) : "no students"
 end
@@ -128,14 +134,9 @@ end
 #prints the total number of elements in the students array i.e. total number of students
 def print_footer
   puts "\nOverall, we have #{@students.length} #{pluralize("student")} in all cohorts"
-
-  # if pluralize?
-  #   puts "\nOverall, we have #{@students.length} students in all cohorts"
-  # else
-  #   puts "\nOverall, we don't have #{@students.length} any student in the directory"
-  # end
 end
 
+#Prints all the menu options for the user to see
 def print_menu_options
     puts ""
     puts "-------Main menu-------".center(50)
@@ -151,7 +152,7 @@ def print_menu_options
 end
 
 
-#This method 
+#This method controls the menu
 def interactive_menu
   puts ""
   puts "-----Student Directory Program-----".center(50)
@@ -162,6 +163,7 @@ def interactive_menu
   end
 end
 
+#Holds the menu options
 def menu_options(selection)
      case selection
     when "1"
@@ -193,6 +195,12 @@ def menu_options(selection)
     end
 end
 
+#Find a specific student in the array taking the name as a argument
+def find_student(name)
+  @students.select { |student| student[:name] == name}
+end
+
+#Updates a estudents information accessing it by name
 def update_student
   name = ask_for("name of the student you want to change")
   selected_student = find_student(name)
@@ -206,13 +214,12 @@ def update_student
   end
 end
 
-def find_student(name)
-  @students.select { |student| student[:name] == name}
-end
-#Method that saves students in a file called students.csv
+#Method that asks the user for a filename and adds the csv extension
 def user_filename
 ask_for("file name") + ".csv"
 end
+
+#Saves the students in the file
 def save_students
   File.open(user_filename, "w") do |file|
     @students.each do |student|
@@ -222,6 +229,7 @@ def save_students
     end
   end
 end
+
 #Method that loads data from a file
 def load_students(filename = "students.csv")
   File.open(filename, "r") do |file|
@@ -231,12 +239,14 @@ def load_students(filename = "students.csv")
     end
   end
 end
+
 #Method that adds the hash into the global @students array
 def add_student(student_hash)
   @students << student_hash
   @students.uniq! { |student| student[:name]}
 end
-#Method that loads the file you put as a argument
+
+#Method that loads the file you put as a argument in the command line
 def try_load_students
   filename = ARGV.first
   return if filename.nil?
