@@ -40,27 +40,28 @@ end
 
 #Hash Input method
 def input_students
-  puts "Please enter the name of the first student"
   puts "To go back to the Main menu, just hit return without entering any name"
   #Get the 1st name
-  name = gets.chomp
-  #While name is not empty, repeat this
+  name = ask_for("name")
+  get_student_details(name)
+end
+
+def ask_for(detail)
+  puts "Enter your #{detail}"
+  gets.chomp  
+end
+
+def get_student_details(name)
   while !name.empty? do
     #Gets month
-    puts "Enter the month of the cohort"
-    month = gets.chomp.downcase.to_sym
-    if month.empty?
-      month = :june
-    end
+    month = ask_for("month")
+    month = :june if month.empty?
     #Gets their hobbies
-    puts "Enter their hobbies"
-    hobbies = gets.chomp
+    hobbies = ask_for("hobbies")
     #add the student hash to the array
-    @students << {:name => name, :cohort => month, :hobbies => hobbies}
-    puts number_of_students(students)
+    add_student({:name => name, :cohort => month.downcase.to_sym, :hobbies => hobbies})
     #get another name from the user
-    puts "\nEnter the name of the next student or press return to go back to the Main menu"
-    name = gets.chomp
+    name = ask_for("name")
   end
 end
 
@@ -68,23 +69,30 @@ def pluralize?
   @students.length > 1
 end
 
-def number_of_students
-  if pluralize?
-    "Now we have #{@students.length} students"
-  else 
-    "Now we have #{@students.length} student"
-  end
+def pluralize(word)
+  return word + "s" if pluralize?
+  word
 end
 
+# def number_of_students
+#   if pluralize?
+#     "Now we have #{@students.length} students"
+#   else 
+#     "Now we have #{@students.length} student"
+#   end
+# end
+
 #names method takes an array (which is an array multiple 2 element hashes) and prints each element of the array along with its index number
+def print_line(student, index)
+  "#{index}. #{student[:name]} - #{student[:cohort]} cohort, hobbies: #{student[:hobbies]}"
+end
+
+def print_student_list(list_of_students)
+  list_of_students.map.with_index(1) { |student, index| print_line(student, index) }
+end
+
 def print_names(list_of_students)
-  if !list_of_students.empty? 
-    list_of_students.each.with_index(1) do |student, index|
-      puts "#{index}. #{student[:name]} - #{student[:cohort]} cohort, hobbies: #{student[:hobbies]}"
-    end
-  else
-    puts "no students"
-  end
+  puts !list_of_students.empty? ?  print_student_list(list_of_students) : "no students"
 end
 
 #This is the method that sorts the students by cohort
@@ -94,21 +102,18 @@ end
 
 #only prints those elements of the students array that begin with an A
 def print_names_begins_with(letter)
-  puts "\nThis is a list of students whose names begin with the letter #{letter}"
-  name_begin_a = @students.select {|student| student[:name].start_with?(letter, letter.upcase)}
+  name_begin_with = @students.select {|student| student[:name].start_with?(letter, letter.upcase)}
 #This code tests if is empty
-  if name_begin_a.empty?
+  if name_begin_with.empty?
     puts "-There are no students whose names begin with an 'A'"
   else
-    print_names(name_begin_a)
-  end 
+    print_names(name_begin_with)
+  end
 end
 
 #only prints those elements of the students array that have less than 12 characters
 def print_length_less_12
-  puts "\nThis is a list of students with less than 12 letters in their names"
   name_less_than_12_letters = @students.select { |student| student[:name].length < 12 }
-  
   if name_less_than_12_letters.empty?
     puts "-There are no students who have less than 12 letters in their name"
   else
@@ -118,11 +123,13 @@ end
 
 #prints the total number of elements in the students array i.e. total number of students
 def print_footer
-  if pluralize?
-    puts "\nOverall, we have #{@students.length} students in all cohorts"
-  else
-    puts "\nOverall, we don't have #{@students.length} any student in the directory"
-  end
+  puts "\nOverall, we have #{@students.length} #{pluralize("student")} in all cohorts"
+
+  # if pluralize?
+  #   puts "\nOverall, we have #{@students.length} students in all cohorts"
+  # else
+  #   puts "\nOverall, we don't have #{@students.length} any student in the directory"
+  # end
 end
 
 def print_menu_options
@@ -135,11 +142,12 @@ def print_menu_options
     puts "5. Show the students grouped by cohort"
     puts "6. Save the students in a file"
     puts "7. Load students from the file"
+    puts "8. Update student information"
     puts "9. Exit"
 end
 
 
-#This method holds the main menu that calls all the methods selected by the user
+#This method 
 def interactive_menu
   puts ""
   puts "-----Student Directory Program-----".center(50)
@@ -153,14 +161,16 @@ end
 def menu_options(selection)
      case selection
     when "1"
-      @students = input_students
+      input_students
     when "2"
       puts "\nThis is a list of all students in the Student Directory"
       print_names(@students)
       print_footer
     when "3"
+      puts "\nThis is a list of students whose names begin with 'A'"
       print_names_begins_with('a')
     when "4"
+      puts "\nThis is a list of students with less than 12 letters in their names"
       print_length_less_12
     when "5"
       puts "\nThis is the Student Directory grouped by cohort month"
@@ -170,6 +180,8 @@ def menu_options(selection)
       save_students
     when "7"
       load_students
+    when "8"
+      update_student
     when "9"
       exit
     else
@@ -177,6 +189,22 @@ def menu_options(selection)
     end
 end
 
+def update_student
+  name = ask_for("name")
+  selected_student = find_student(name)
+  print_names(selected_student)
+  confirmation = ask_for("confirmation Y/N")
+  if confirmation.downcase == "y"
+    selected_student.first[:cohort] = ask_for("cohort")
+    selected_student.first[:hobbies] = ask_for("hobbies")
+    @students.map! {|student| (student[:name] == selected_student.first[:name]) ? selected_student.first : student }
+  end
+end
+
+def find_student(name)
+  @students.select { |student| student[:name] == name}
+end
+#Method that saves students in a file called students.csv
 def save_students
   file = File.open("students.csv", "w")
   @students.each do |student|
@@ -186,25 +214,27 @@ def save_students
   end
   file.close
 end
-
+#Method that loads data from a file
 def load_students(filename = "students.csv")
   file = File.open("students.csv", "r")
   file.readlines.each do |line|
     name, cohort, hobbies = line.strip.split(',')
-      add_student(name, cohort, hobbies)
+      add_student({name: name, cohort: cohort.to_sym, hobbies: hobbies})
   end
   file.close
 end
-
-def add_student(name, cohort, hobbies)
-  @students << {name: name, cohort: cohort.to_sym, hobbies: hobbies}
+#Method that adds the hash into the global @students array
+def add_student(student_hash)
+  @students << student_hash
+  @students.uniq! { |student| student[:name]}
 end
+#Method that loads the file you put as a argument
 def try_load_students
   filename = ARGV.first
   return if filename.nil?
   if File.exists?(filename)
     load_students(filename)
-    puts "Loaded #{students.length} students from #{filename}"
+    puts "Loaded #{@students.length} students from #{filename}"
   else
     puts "Sorry #{filename} does not exist"
     exit
