@@ -34,6 +34,7 @@ students = [
 
 #Declarations
 @students = []
+require "csv"
 
 #print_header method just prints the header
 def print_header
@@ -182,7 +183,7 @@ def menu_options(selection)
     when "6"
       save_students
     when "7"
-      load_students
+      load_students(ask_for("file name") + ".csv")
     when "8"
       update_student
     when "9"
@@ -209,8 +210,11 @@ def find_student(name)
   @students.select { |student| student[:name] == name}
 end
 #Method that saves students in a file called students.csv
+def user_filename
+ask_for("file name") + ".csv"
+end
 def save_students
-  File.open("students.csv", "w") do |file|
+  File.open(user_filename, "w") do |file|
     @students.each do |student|
       student_data = [student[:name], student[:cohort], student[:hobbies]]
       csv_line = student_data.join(",")
@@ -220,7 +224,7 @@ def save_students
 end
 #Method that loads data from a file
 def load_students(filename = "students.csv")
-  File.open("students.csv", "r") do |file|
+  File.open(filename, "r") do |file|
     file.readlines.each do |line|
       name, cohort, hobbies = line.strip.split(',')
         add_student({name: name, cohort: cohort.to_sym, hobbies: hobbies})
