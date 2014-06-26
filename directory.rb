@@ -32,6 +32,9 @@ students = [
 =end
 
 
+#Declarations
+@students = []
+
 #print_header method just prints the header
 def print_header
   puts "The students of my cohort at Makers Academy"
@@ -47,8 +50,8 @@ def input_students
 end
 
 def ask_for(detail)
-  puts "Enter your #{detail}"
-  gets.chomp  
+  puts "Enter #{detail}"
+  STDIN.gets.chomp  
 end
 
 def get_student_details(name)
@@ -153,7 +156,7 @@ def interactive_menu
   puts "-----Student Directory Program-----".center(50)
   loop do
     print_menu_options
-    selection = gets.chomp
+    selection = STDIN.gets.chomp
     menu_options(selection)
   end
 end
@@ -190,13 +193,14 @@ def menu_options(selection)
 end
 
 def update_student
-  name = ask_for("name")
+  name = ask_for("name of the student you want to change")
   selected_student = find_student(name)
   print_names(selected_student)
-  confirmation = ask_for("confirmation Y/N")
+  confirmation = ask_for(" Y/N to modify")
   if confirmation.downcase == "y"
-    selected_student.first[:cohort] = ask_for("cohort")
-    selected_student.first[:hobbies] = ask_for("hobbies")
+    selected_student.first[:name] = ask_for("New name")
+    selected_student.first[:cohort] = ask_for("New cohort")
+    selected_student.first[:hobbies] = ask_for("New hobbies")
     @students.map! {|student| (student[:name] == selected_student.first[:name]) ? selected_student.first : student }
   end
 end
@@ -206,22 +210,22 @@ def find_student(name)
 end
 #Method that saves students in a file called students.csv
 def save_students
-  file = File.open("students.csv", "w")
-  @students.each do |student|
-    student_data = [student[:name], student[:cohort], student[:hobbies]]
-    csv_line = student_data.join(",")
-    file.puts csv_line
+  File.open("students.csv", "w") do |file|
+    @students.each do |student|
+      student_data = [student[:name], student[:cohort], student[:hobbies]]
+      csv_line = student_data.join(",")
+      file.puts csv_line
+    end
   end
-  file.close
 end
 #Method that loads data from a file
 def load_students(filename = "students.csv")
-  file = File.open("students.csv", "r")
-  file.readlines.each do |line|
-    name, cohort, hobbies = line.strip.split(',')
-      add_student({name: name, cohort: cohort.to_sym, hobbies: hobbies})
+  File.open("students.csv", "r") do |file|
+    file.readlines.each do |line|
+      name, cohort, hobbies = line.strip.split(',')
+        add_student({name: name, cohort: cohort.to_sym, hobbies: hobbies})
+    end
   end
-  file.close
 end
 #Method that adds the hash into the global @students array
 def add_student(student_hash)
@@ -240,9 +244,6 @@ def try_load_students
     exit
   end
 end
-
-#Declaration
-@students = []
 
 #Calling the Menu method
 try_load_students
