@@ -6,6 +6,20 @@ The student directory script allows you to manage the list of students enrolled 
 How to use
 ----------
 
+Run the program without a file to load students.
+
 ```shell
 ruby directory.rb
 ```
+
+Run the program with a file to load the students from.
+
+```shell
+ruby directory.rb filename.csv
+```
+
+File format to load the students from.
+---------------------------------
+
+- File must be a .csv file extension
+- The file must have three values e,g. marco,june,golf

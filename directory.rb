@@ -1,40 +1,5 @@
-
-
-# This code is an array of the students in the June cohort at MA
-=begin
-students = [
-  {:name => "Dave", :cohort => :june},
-  {:name => "Eddie", :cohort => :june},
-  {:name => "Catharina", :cohort => :june},
-  {:name => "Igor", :cohort => :june},
-  {:name => "Marco", :cohort => :june},
-  {:name => "Lisa", :cohort => :june},
-  {:name => "Michiel", :cohort => :june},
-  {:name => "Jean", :cohort => :june},
-  {:name => "Nicola", :cohort => :june},
-  {:name => "Jennie", :cohort => :june},
-  {:name => "Iona", :cohort => :june},
-  {:name => "Nikesh", :cohort => :june},
-  {:name => "Chloe", :cohort => :june},
-  {:name => "Toan", :cohort => :june},
-  {:name => "Jamie", :cohort => :june},
-  {:name => "Peter", :cohort => :june},
-  {:name => "Talal", :cohort => :june},
-  {:name => "Charlie", :cohort => :june},
-  {:name => "Charlotte", :cohort => :june},
-  {:name => "Thomas", :cohort => :june},
-  {:name => "Zoe", :cohort => :june},
-  {:name => "Hannah", :cohort => :june},
-  {:name => "Joe", :cohort => :june},
-  {:name => "Alex", :cohort => :june},
-  {:name => "Jeremy", :cohort => :june}
-]
-=end
-
-
 #Declarations
 @students = []
-require "csv"
 
 #print_header method just prints the header
 def print_header
@@ -82,14 +47,6 @@ def pluralize(word)
   word
 end
 
-# def number_of_students
-#   if pluralize?
-#     "Now we have #{@students.length} students"
-#   else 
-#     "Now we have #{@students.length} student"
-#   end
-# end
-
 #Method that prints a line with the content of the hash
 def print_line(student, index)
   "#{index}. #{student[:name]} - #{student[:cohort]} cohort, hobbies: #{student[:hobbies]}"
@@ -113,7 +70,6 @@ end
 #only prints those elements of the students array that begin with an A
 def print_names_begins_with(letter)
   name_begin_with = @students.select {|student| student[:name].start_with?(letter, letter.upcase)}
-#This code tests if is empty
   if name_begin_with.empty?
     puts "-There are no students whose names begin with an 'A'"
   else
@@ -150,7 +106,6 @@ def print_menu_options
     puts "8. Update student information"
     puts "9. Exit"
 end
-
 
 #This method controls the menu
 def interactive_menu
@@ -216,7 +171,7 @@ end
 
 #Method that asks the user for a filename and adds the csv extension
 def user_filename
-ask_for("file name") + ".csv"
+  ask_for("file name") + ".csv"
 end
 
 #Saves the students in the file
@@ -232,12 +187,12 @@ end
 
 #Method that loads data from a file
 def load_students(filename = "students.csv")
-  File.open(filename, "r") do |file|
+  file = File.open(filename, "r")
     file.readlines.each do |line|
       name, cohort, hobbies = line.strip.split(',')
         add_student({name: name, cohort: cohort.to_sym, hobbies: hobbies})
     end
-  end
+  file.close
 end
 
 #Method that adds the hash into the global @students array
@@ -262,46 +217,3 @@ end
 #Calling the Menu method
 try_load_students
 interactive_menu
-
-
-#This code calls the methods above
-#students = input_students
-#print_header
-#print_names(students)
-#print_names_begin_a(students)
-#print_length_less_12(students)
-#names_by_cohort(students)
-#print_footer(students)
-
-#    binding.pry
-#require 'pry'
-
-
-
-# class Student
-#   attr_accessor :name, :cohort
-#   # attr_reader :attr_names
-#   # attr_writer :attr_names
-
-#   # def cohort
-#   #   @cohort
-#   # end
-
-#   # def cohort=(value)
-#   #   @cohort = value
-#   # end
-
-#   def initialize(name, cohort)
-#     @name = name
-#     @cohort = cohort
-#   end
-# end
-
-# students = [
-#   Student.new("marco", "june"),
-#   Student.new("kori", "december"),
-#   Student.new("alex", "june")
-# ]
-
-# students.sort_by(&:cohort)
-# students.sort_by {|student| student.cohort }
