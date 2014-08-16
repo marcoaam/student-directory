@@ -22,4 +22,4 @@ File format to load the students from.
 ---------------------------------
 
 - File must be a .csv file extension
-- The file must have three values e,g. marco,june,golf
+- The file must have three values name,cohort,hobbies.  e,g. Marco,june,golf

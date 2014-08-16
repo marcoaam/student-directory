@@ -120,7 +120,7 @@ end
 
 #Holds the menu options
 def menu_options(selection)
-     case selection
+  case selection
     when "1"
       input_students
     when "2"
@@ -147,7 +147,7 @@ def menu_options(selection)
       exit
     else
       puts "Invalid selection"
-    end
+  end
 end
 
 #Find a specific student in the array taking the name as a argument
